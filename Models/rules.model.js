@@ -19,12 +19,12 @@ const RulesSchema = mongoose.Schema([
             "PublicVenue": String,
         },
         pricingTier: {
-            "South": String,
-            "Southeast": String,
-            "Northeast": String,
-            "Midwest": String,
-            "Northwest": String,
-            "West": String,
+            "South": Number,
+            "Southeast": Number,
+            "Northeast": Number,
+            "Midwest": Number,
+            "Northwest": Number,
+            "West": Number,
         },
         sqFtRange:{
             "lt250001" :String,
