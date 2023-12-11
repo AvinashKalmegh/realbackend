@@ -9,7 +9,7 @@ const getData = async (req, res) => {
 
         const data = await AdminModel.find();
 
-        return res.status(201).json({ result: data});
+        return res.status(201).json({ result: data });
 
     } catch (error) {
         // Handle specific errors and provide appropriate messages
@@ -19,14 +19,14 @@ const getData = async (req, res) => {
 
 const deleteData = async (req, res) => {
     try {
-        const {id} = req.params;
-        const data = await AdminModel.findOneAndDelete({_id : id});
+        const { id } = req.params;
+        const data = await AdminModel.findOneAndDelete({ _id: id });
 
-        if(!data){
+        if (!data) {
             return res.status(404).json({ error: "Data not found" });
         }
 
-        return res.status(201).json({ result: data});
+        return res.status(201).json({ result: data });
 
     } catch (error) {
         // Handle specific errors and provide appropriate messages
@@ -46,8 +46,8 @@ const adminSignup = async (req, res) => {
             return res.status(409).json({ result: "Admin already registered" });
         } else {
             // Hash the password
-            const passwordHash = await bcrypt.hash(payload.password, 8);
-            payload.password = passwordHash;
+            // const passwordHash = await bcrypt.hash(payload.password, 8);
+            // payload.password = passwordHash;
 
             // Create a new admin document
             const newAdmin = new AdminModel(payload);
@@ -62,45 +62,63 @@ const adminSignup = async (req, res) => {
 };
 
 
-
 const adminSignin = async (req, res) => {
     try {
-        const payload = req.body;
-        const admin = await AdminModel.findOne({ email: payload.email });
+        const { email, password } = req.body;
+        const admin = await AdminModel.findOne({ email, password });
 
         if (!admin) {
             return res.status(401).json({ result: "Invalid credentials" });
         }
 
-        const correctPassword = await bcrypt.compare(payload.password, admin.password);
+        return res.status(200).json({ result: "Signin successful" });
 
-        if (!correctPassword) {
-            return res.status(401).json({ result: "Invalid credentials" });
-        }
-
-        const token = jwt.sign({ email: admin.email, userId: admin._id, type: admin.type }, "avinashkalmegh123");
-        const decoded = verifyToken(token);
-
-        if (decoded) {
-            return res.status(200).json({ result: "Signin successful", token, userData: decoded });
-        } else {
-            return res.status(500).json({ result: "Token verification failed" });
-        }
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
 
 
-const verifyToken = (token) => {
-    try {
-        const decoded = jwt.verify(token, "avinashkalmegh123");
-        return decoded;
-    } catch (err) {
-        return null; // Token is invalid
-    }
-};
+
+
+// const adminSignin = async (req, res) => {
+//     try {
+//         const payload = req.body;
+//         const admin = await AdminModel.findOne({ email: payload.email });
+
+//         if (!admin) {
+//             return res.status(401).json({ result: "Invalid credentials" });
+//         }
+
+//         const correctPassword = await bcrypt.compare(payload.password, admin.password);
+
+//         if (!correctPassword) {
+//             return res.status(401).json({ result: "Invalid credentials" });
+//         }
+
+//         const token = jwt.sign({ email: admin.email, userId: admin._id, type: admin.type }, "avinashkalmegh123");
+//         const decoded = verifyToken(token);
+
+//         if (decoded) {
+//             return res.status(200).json({ result: "Signin successful", token, userData: decoded });
+//         } else {
+//             return res.status(500).json({ result: "Token verification failed" });
+//         }
+//     } catch (error) {
+//         return res.status(500).json({ error: error.message });
+//     }
+// };
+
+
+// const verifyToken = (token) => {
+//     try {
+//         const decoded = jwt.verify(token, "avinashkalmegh123");
+//         return decoded;
+//     } catch (err) {
+//         return null; // Token is invalid
+//     }
+// };
 
 
 
-module.exports = { adminSignin, adminSignup ,getData, deleteData};
+module.exports = { adminSignin, adminSignup, getData, deleteData };
