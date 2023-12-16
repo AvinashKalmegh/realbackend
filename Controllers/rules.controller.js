@@ -12,50 +12,57 @@ const getRules = async (req, res) => {
 
 const postRules = async (req, res) => {
   try {
-      const { dealStatus, pricingTier, sqFtRange, cre, escalator } = req.body;
+    const { dealStatus, pricingTier, sqFtRange, cre, escalator, classOfService, service, dealType, financialModel } = req.body;
 
-      const newRule = new RulesModel({
-          dealStatus: new Map(dealStatus.map(entry => [entry.key, entry.value])),
-          pricingTier: new Map(pricingTier.map(entry => [entry.key, entry.value])),
-          sqFtRange: new Map(sqFtRange.map(entry => [entry.key, entry.value])),
-          cre,
-          escalator,
-      });
+    const newRule = new RulesModel({
+      dealStatus: new Map(dealStatus.map(entry => [entry.key, entry.value])),
+      pricingTier: new Map(pricingTier.map(entry => [entry.key, entry.value])),
+      sqFtRange: new Map(sqFtRange.map(entry => [entry.key, entry.value])),
+      cre,
+      escalator,
+      classOfService: classOfService || [],
+      service: service || [],
+      dealType: dealType || [],
+      financialModel: financialModel || []
+    });
 
-      const savedRule = await newRule.save();
-      res.status(201).json(savedRule);
+    const savedRule = await newRule.save();
+    res.status(201).json(savedRule);
   } catch (error) {
-      console.error('Error saving data:', error);
-      res.status(500).json({ error: 'Failed to save data' });
+    console.error('Error saving data:', error);
+    res.status(500).json({ error: 'Failed to save data' });
   }
 };
 
 
-// Endpoint to update existing data based on ID
 const patchRules = async (req, res) => {
   try {
-      const { dealStatus, pricingTier, sqFtRange, cre, escalator } = req.body;
-      const { id } = req.params;
+    const { dealStatus, pricingTier, sqFtRange, cre, escalator, classOfService, service, dealType, financialModel } = req.body;
+    const { id } = req.params;
 
-      const existingRule = await RulesModel.findById(id);
+    const existingRule = await RulesModel.findById(id);
 
-      if (!existingRule) {
-          return res.status(404).json({ error: 'Rule not found' });
-      }
+    if (!existingRule) {
+      return res.status(404).json({ error: 'Rule not found' });
+    }
 
-      // Update the existingRule fields with new data
-      existingRule.dealStatus = new Map(dealStatus.map(entry => [entry.key, entry.value]));
-      existingRule.pricingTier = new Map(pricingTier.map(entry => [entry.key, entry.value]));
-      existingRule.sqFtRange = new Map(sqFtRange.map(entry => [entry.key, entry.value]));
-      existingRule.cre = cre;
-      existingRule.escalator = escalator;
+    // Update the existingRule fields with new data
+    existingRule.dealStatus = new Map(dealStatus.map(entry => [entry.key, entry.value]));
+    existingRule.pricingTier = new Map(pricingTier.map(entry => [entry.key, entry.value]));
+    existingRule.sqFtRange = new Map(sqFtRange.map(entry => [entry.key, entry.value]));
+    existingRule.cre = cre;
+    existingRule.escalator = escalator;
+    existingRule.classOfService = classOfService;
+    existingRule.service = service;
+    existingRule.dealType = dealType;
+    existingRule.financialModel = financialModel;
 
-      const updatedRule = await existingRule.save();
+    const updatedRule = await existingRule.save();
 
-      res.status(200).json(updatedRule);
+    res.status(200).json(updatedRule);
   } catch (error) {
-      console.error('Error updating data:', error);
-      res.status(500).json({ error: 'Failed to update data' });
+    console.error('Error updating data:', error);
+    res.status(500).json({ error: 'Failed to update data' });
   }
 };
 
@@ -66,4 +73,4 @@ const patchRules = async (req, res) => {
 
 module.exports = { getRules, postRules, patchRules };
 
-  
+

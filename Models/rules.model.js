@@ -19,21 +19,21 @@ const RulesSchema = new mongoose.Schema({
     escalator: {
         type: Number,
     },
-    classOfService :{
-        type:Map,
-        of: String
+    classOfService: {
+        type: [String],
+        default: [],
     },
-    service:{
-        type:Map,
-        of:String
+    service: {
+        type: [String],
+        default: [],
     },
-    dealType:{
-        type:Map,
-        of:String
+    dealType: {
+        type: [String],
+        default: [],
     },
-    financialModel:{
-        type:Map,
-        of:String
+    financialModel: {
+        type: [String],
+        default: [],
     }
 });
 

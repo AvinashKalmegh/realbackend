@@ -4,6 +4,8 @@ const main = require("./Config/db");
 const UserRouter = require("./Routes/user.route");
 const AdminRouter = require("./Routes/admin.route");
 const RulesRouter = require("./Routes/rules.route");
+const SaveRouter = require("./Routes/save.route");
+const BopRouter = require("./Routes/bop.route");
 
 require("dotenv").config();
 
@@ -21,7 +23,9 @@ app.get("/", (req, res) => {
 
 app.use("/api/user", UserRouter);
 app.use("/api/admin",AdminRouter);
-app.use("/api/rules",RulesRouter)
+app.use("/api/rules",RulesRouter);
+app.use("/api/save",SaveRouter);
+app.use("/api/boprate",BopRouter);
 
 
 

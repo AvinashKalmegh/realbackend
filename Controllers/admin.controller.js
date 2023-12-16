@@ -46,8 +46,8 @@ const adminSignup = async (req, res) => {
             return res.status(409).json({ result: "Admin already registered" });
         } else {
             // Hash the password
-            const passwordHash = await bcrypt.hash(payload.password, 8);
-            payload.password = passwordHash;
+            // const passwordHash = await bcrypt.hash(payload.password, 8);
+            // payload.password = passwordHash;
 
             // Create a new admin document
             const newAdmin = new AdminModel(payload);
@@ -71,38 +71,49 @@ const adminSignin = async (req, res) => {
         const payload = req.body;
         const admin = await AdminModel.findOne({ email: payload.email });
 
-        if (!admin) {
+        if (!admin || payload.password !== admin.password) {
             return res.status(401).json({ result: "Invalid credentials" });
         }
 
-        const correctPassword = await bcrypt.compare(payload.password, admin.password);
+        function formatDate(date) {
+            const hours = (`0${date.getUTCHours()}`).slice(-2);
+            const minutes = (`0${date.getUTCMinutes()}`).slice(-2);
+            const seconds = (`0${date.getUTCSeconds()}`).slice(-2);
 
-        if (!correctPassword) {
-            return res.status(401).json({ result: "Invalid credentials" });
+            const day = (`0${date.getUTCDate()}`).slice(-2);
+            const monthNames = [
+                "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+            ];
+            const month = monthNames[date.getUTCMonth()];
+            const year = date.getUTCFullYear();
+
+            return `${hours}:${minutes}:${seconds} ${day}-${month}-${year}`;
         }
 
-        const token = jwt.sign({ email: admin.email, userId: admin._id, type: admin.type }, "avinashkalmegh123");
-        const decoded = verifyToken(token);
+        // Example usage with new Date()
+        const currentDate = new Date();
+        const formattedDate = formatDate(currentDate);
+        // console.log(formattedDate);
 
-        if (decoded) {
-            return res.status(200).json({ result: "Signin successful", token, userData: decoded });
-        } else {
-            return res.status(500).json({ result: "Token verification failed" });
-        }
+
+        const token = {
+            email: admin.email,
+            userId: admin._id,
+            type: admin.type,
+            username: admin.username,
+            role: admin.role,
+            time: formattedDate
+        };
+
+        return res.status(200).json({ result: "Signin successful", token, userData: token });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
 
 
-const verifyToken = (token) => {
-    try {
-        const decoded = jwt.verify(token, "avinashkalmegh123");
-        return decoded;
-    } catch (err) {
-        return null; // Token is invalid
-    }
-};
+
 
 
 
