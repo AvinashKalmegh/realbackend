@@ -8,7 +8,7 @@ const bopSchema = mongoose.Schema({
 })
 
 
-const BopModel = mongoose.model("sample", bopSchema);
+const BopModel = mongoose.model("doprate", bopSchema);
 
 
 module.exports = BopModel;
