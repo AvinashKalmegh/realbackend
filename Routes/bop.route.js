@@ -1,11 +1,13 @@
 const express = require("express");
-const {getBopRate, patchBop} = require("../Controllers/bop.controller");
+const {getBopRate, patchBop, postBop, getBopByLookup} = require("../Controllers/bop.controller");
 
 const BopRouter = express.Router();
 
 
 BopRouter.get("/",getBopRate);
-BopRouter.patch("/edit/:id",patchBop)
+BopRouter.patch("/edit",patchBop);
+BopRouter.post("/addbop", postBop);
+BopRouter.post("/getbylookup",getBopByLookup);
 
 
 module.exports = BopRouter;

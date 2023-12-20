@@ -6,6 +6,7 @@ const AdminRouter = require("./Routes/admin.route");
 const RulesRouter = require("./Routes/rules.route");
 const SaveRouter = require("./Routes/save.route");
 const BopRouter = require("./Routes/bop.route");
+const DependeciesRouter = require("./Routes/dependencies.route");
 
 require("dotenv").config();
 
@@ -26,6 +27,7 @@ app.use("/api/admin",AdminRouter);
 app.use("/api/rules",RulesRouter);
 app.use("/api/save",SaveRouter);
 app.use("/api/boprate",BopRouter);
+app.use("/api/dependencies",DependeciesRouter);
 
 
 
